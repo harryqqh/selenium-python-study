@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from pages.base_page import BasePage
+from base.base_page import BasePage
 
 class LoginPage(BasePage):
     

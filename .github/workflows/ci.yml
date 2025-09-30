@@ -1,4 +1,5 @@
-name: Run Selenium Pytest
+name: CI - Selenium Tests
+
 on:
   push:
     branches: [ main ]
@@ -6,38 +7,53 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
 
-
     steps:
-      # Get code form repo
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      # Set up Python environment
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
-          
-      # Install Google Chrome
+          python-version: "3.11"
+
       - name: Install Google Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget gnupg unzip
+          sudo apt-get install -y wget unzip curl
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
+          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
 
-      # Install dependencies
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+' | head -1)
+          DRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
+          wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${DRIVER_VERSION}/linux64/chromedriver-linux64.zip
+          unzip chromedriver-linux64.zip
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+          chmod +x /usr/local/bin/chromedriver
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          
 
-
-      # Run tests with pytest
-      - name: Run smoke tests
+      - name: Run smoke tests with Allure results
         run: |
-          echo "PYTHONPATH=$PYTHONPATH" >> $GITHUB_ENV
-          pytest -m smoke --maxfail=1 --disable-warnings -q
+          PYTHONPATH=$PYTHONPATH:. pytest -m smoke -v -s --maxfail=1 --disable-warnings --alluredir=allure-results
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@v1.7
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Upload Allure Report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report

@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pages.base_page import BasePage
+from base.base_page import BasePage
 
 class RecruitmentPage(BasePage):
     RECRUITMENT_MENU = (By.XPATH, "//span[text()='Recruitment']")

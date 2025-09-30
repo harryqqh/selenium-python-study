@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-from utils.config_reader import ConfigReader# Import function form library for optional interaction
+from utils.config_reader import ConfigReader # Import function form library for optional interaction
 
 
 class BaseTest:

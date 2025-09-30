@@ -1,4 +1,4 @@
-from pages.base_test import BaseTest
+from base.base_test import BaseTest
 from pages.login_page import LoginPage
 from pages.dashboard_page import DasboardPage
 from pages.recruitment_page import RecruitmentPage
