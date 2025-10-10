@@ -45,3 +45,8 @@ class TestVacancies(BaseTest):
         # Perform Searching Manager
         print("🔵 Perform Searching Hiring Manager")
         addVacancyPage.search_vacancy()
+        
+        # Verify the vacancy is in the list
+        vacancy_row = addVacancyPage.get_vacancy_in_list()
+        assert len(vacancy_row) > 0, 'No vacancy items found after search'
+        print(f"✅  {len(vacancy_row)} Vacancy found in the list after search")

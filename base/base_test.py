@@ -10,12 +10,16 @@ class BaseTest:
     @pytest.fixture(scope="class", autouse=True)
     #Initialize webdriver
     def setup(self, request):
-        chrome_options = webdriver.ChromeOptions() # definition option 
-        chrome_options.add_argument("--headless") # add option to Run headless
-        chrome_options.add_argument("--no-sandbox")         # Required for GitHub Actions
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        driver = webdriver.Chrome(options=chrome_options) # implement option 
+        # chrome_options = webdriver.ChromeOptions() # definition option 
+        # chrome_options.add_argument("--headless") # add option to Run headless
+        # chrome_options.add_argument("--no-sandbox")         # Required for GitHub Actions
+        # chrome_options.add_argument("--disable-dev-shm-usage")
+        # driver = webdriver.Chrome(options=chrome_options) # implement option 
+        
         # driver.get("https://opensource-demo.orangehrmlive.com/")
+        
+        driver = webdriver.Chrome() # Initialize Chrome driver
+        
         # Navigate to base URL with file Config
         base_url = ConfigReader.get_base_url()
         if base_url:

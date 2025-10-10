@@ -15,6 +15,11 @@ class BasePage:
         element = self.wait.until(EC.presence_of_element_located(xpath))
         return element
     
+    #Method to find multiple elements
+    def get_elements(self, xpath):
+        elements = self.wait.until(EC.presence_of_all_elements_located(xpath))
+        return elements
+    
     #Method to click button element
     def click(self, xpath):
         self.wait.until(EC.presence_of_element_located(xpath)).click()

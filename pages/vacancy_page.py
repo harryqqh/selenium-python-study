@@ -26,6 +26,7 @@ class VacancyPage(BasePage):
     JOB_TITLE = (By.XPATH,'//div[@role="listbox"]//span[text()= "QA Engineer"]')
     CANCEL_BUTTON = (By.XPATH, '//button[@type="button" and text()=" Cancel "]')
     EDIT_VACANCY_LABEL = (By.XPATH, '//h6[text()="Edit Vacancy"]')
+    VACANCY_ROW = (By.XPATH, '//*[@class="oxd-table-card-cell-checkbox"]')
 
     
     def __init__(self, driver):
@@ -86,6 +87,10 @@ class VacancyPage(BasePage):
         manager = self.get_element(self.PROFILE).text
         manager_locator = (By.XPATH,f"//div[@role='option']//span[text()='{manager}']")
         self.click(manager_locator)
+    
+    def get_vacancy_in_list(self):
+        vacancy_rows = self.get_elements(self.VACANCY_ROW)
+        return vacancy_rows
 
 
     # Perform complete actions   
