@@ -22,8 +22,10 @@ class VacancyPage(BasePage):
     NUMBER_OF_POSITIONS_INPUT = (By.XPATH, '//label[contains(text(), "Number of Positions")]/../../div/input')
     PROFILE = (By.XPATH, "//*[@class='oxd-userdropdown-name']")
     SAVE_BUTTON = (By.XPATH, '//button[@type="submit"]')
+    
     JOB_TITLE_DROPDOWN = (By.XPATH,'//div[@class="oxd-select-wrapper"]')
-    JOB_TITLE = (By.XPATH,'//div[@role="listbox"]//span[text()= "QA Engineer"]')
+    JOB_TITLE = (By.XPATH,'//div[@role="listbox"]//span')
+    
     CANCEL_BUTTON = (By.XPATH, '//button[@type="button" and text()=" Cancel "]')
     EDIT_VACANCY_LABEL = (By.XPATH, '//h6[text()="Edit Vacancy"]')
     VACANCY_ROW = (By.XPATH, '//*[@class="oxd-table-card-cell-checkbox"]')
@@ -46,7 +48,7 @@ class VacancyPage(BasePage):
         self.wait.until(EC.presence_of_element_located(self.VACANCY_NAME_INPUT)).send_keys(vacancy_name)
         
     # Select from dropdown
-    def select_job_title_from_dropdown(self):
+    def select_job_title_from_dropdown(self, value):
         self.click(self.JOB_TITLE_DROPDOWN)
         self.wait.until(EC.presence_of_element_located(self.JOB_TITLE)).click()
         
