@@ -3,6 +3,8 @@ from pages.login_page import LoginPage
 from pages.dashboard_page import DasboardPage
 from pages.recruitment_page import RecruitmentPage
 from pages.vacancy_page import VacancyPage
+from utils.config_reader import ConfigReader
+from utils.data_reader import DataReader
 from datetime import datetime
 
 import pytest
@@ -18,12 +20,19 @@ class TestVacancies(BaseTest):
         recruitmentPage = RecruitmentPage(self.driver)
         vacanciesPage = RecruitmentPage(self.driver)
         addVacancyPage = VacancyPage(self.driver)
+        userName = ConfigReader.get_username()
+        passWord = ConfigReader.get_password()
+        data_reader = DataReader()
+        vacancy_list = data_reader.get_vacancy_data()
+        vacancyData = vacancy_list[0]
+        
+        # data = new Dataset(VACENCY_DATA);
         
         vacancyName = 'Automation tester for' + str(datetime.now())
 
         # Perform login
         print("🔵 Login attempt")
-        loginPage.login("Admin", "admin123")
+        loginPage.login(userName, passWord)
         assert dashboardPage.verify_login_successful() is True
         print("✅ Login successful")
         
@@ -33,7 +42,7 @@ class TestVacancies(BaseTest):
         
         # Add new vacancy
         print("🔵 Perform complete add Vacancy")
-        addVacancyPage.perform_complete_add_vacancy(vacancyName, "Automation testing is running", "1")
+        addVacancyPage.perform_complete_add_vacancy(vacancyName, vacancyData)
         assert addVacancyPage.verify_edit_vacancy_displayed() is True, 'Failed to add new vacancy'
         print('✅ New Vacancy added successfully')
         
@@ -44,7 +53,7 @@ class TestVacancies(BaseTest):
         
         # Perform Searching Manager
         print("🔵 Perform Searching Hiring Manager")
-        addVacancyPage.search_vacancy()
+        addVacancyPage.search_vacancy("QA Engineer")
         
         # Verify the vacancy is in the list
         vacancy_row = addVacancyPage.get_vacancy_in_list()

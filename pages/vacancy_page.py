@@ -23,9 +23,9 @@ class VacancyPage(BasePage):
     PROFILE = (By.XPATH, "//*[@class='oxd-userdropdown-name']")
     SAVE_BUTTON = (By.XPATH, '//button[@type="submit"]')
     
-    JOB_TITLE_DROPDOWN = (By.XPATH,'//div[@class="oxd-select-wrapper"]')
-    JOB_TITLE = (By.XPATH,'//div[@role="listbox"]//span')
-    
+    JOB_TITLE_DROPDOWN = (By.XPATH,'//label[contains(text(), "Job Title")]/../following-sibling::div//i[contains(@class, "oxd-select-text--arrow")]')
+    # JOB_TITLE = (By.XPATH, f"//div[@role='listbox']//span[normalize-space(text())='{job_title}']")
+
     CANCEL_BUTTON = (By.XPATH, '//button[@type="button" and text()=" Cancel "]')
     EDIT_VACANCY_LABEL = (By.XPATH, '//h6[text()="Edit Vacancy"]')
     VACANCY_ROW = (By.XPATH, '//*[@class="oxd-table-card-cell-checkbox"]')
@@ -48,9 +48,10 @@ class VacancyPage(BasePage):
         self.wait.until(EC.presence_of_element_located(self.VACANCY_NAME_INPUT)).send_keys(vacancy_name)
         
     # Select from dropdown
-    def select_job_title_from_dropdown(self, value):
+    def select_job_title_from_dropdown(self, job_title: str):
+        job_title_locator = (By.XPATH, f"//div[@role='listbox']//span[normalize-space(text())='{job_title}']")  
         self.click(self.JOB_TITLE_DROPDOWN)
-        self.wait.until(EC.presence_of_element_located(self.JOB_TITLE)).click()
+        self.wait.until(EC.presence_of_element_located(job_title_locator)).click()
         
     # Methods to fill description
     def fill_description(self, description: str):
@@ -96,18 +97,18 @@ class VacancyPage(BasePage):
 
 
     # Perform complete actions   
-    def perform_complete_add_vacancy(self, vacancy_name: str, description: str, number_of_position: int):
+    def perform_complete_add_vacancy(self, vacancy_name: str, vacancy_data):
            self.click_add_button()
            self.fill_vacancy_name(vacancy_name)
-           self.select_job_title_from_dropdown()
-           self.fill_description(description)
+           self.select_job_title_from_dropdown(vacancy_data["job_title"])
+           self.fill_description(vacancy_data["description"])
            self.fill_hiring_manager()
-           self.fill_number_of_positions(number_of_position)
+           self.fill_number_of_positions(vacancy_data["number_of_positions"])
            self.click_save_button()
            sleep(1) # for UI showcase
            
-    def search_vacancy(self):
-        self.select_job_title_from_dropdown()
+    def search_vacancy(self, job_title: str):
+        self.select_job_title_from_dropdown(job_title)
         self.select_manager_dropdown()
         self.select_hiring_manager()
         self.click_search_button()
